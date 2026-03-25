@@ -1,0 +1,323 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  font-family: 'Space Grotesk', sans-serif;
+  color: #f7f3ea;
+  background:
+    radial-gradient(circle at top, rgba(255, 193, 7, 0.16), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(15, 199, 185, 0.18), transparent 28%),
+    linear-gradient(180deg, #1a1121 0%, #0d1117 45%, #090b10 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --panel: rgba(13, 17, 23, 0.72);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text-soft: rgba(247, 243, 234, 0.72);
+  --accent: #ffd166;
+  --accent-strong: #ff8c42;
+  --mint: #52e3c2;
+  --danger: #ff6b6b;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#app {
+  min-height: 100vh;
+  padding: 32px 20px 48px;
+}
+
+.shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+}
+
+.hero-panel,
+.game-panel,
+.stats-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-panel,
+.game-panel,
+.stat-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero-panel {
+  border-radius: 28px;
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.hero-panel::after {
+  content: '';
+  position: absolute;
+  inset: auto -40px -60px auto;
+  width: 220px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 66, 0.35) 0%, rgba(255, 140, 66, 0) 70%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  letter-spacing: 0.24em;
+  font-size: 0.78rem;
+}
+
+h1 {
+  margin: 10px 0 12px;
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  line-height: 0.92;
+}
+
+.hero-text {
+  max-width: 32rem;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 1.02rem;
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  align-self: end;
+}
+
+.metric-card,
+.stat-panel {
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metric-card span,
+.stat-panel span,
+.input-wrap span,
+.status {
+  color: var(--text-soft);
+}
+
+.metric-card span,
+.stat-panel span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+}
+
+.metric-card strong,
+.stat-panel strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+}
+
+.game-panel {
+  border-radius: 28px;
+  padding: 24px;
+}
+
+.toolbar,
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.toolbar {
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip,
+.reset-button {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-radius: 999px;
+  padding: 10px 16px;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.chip:hover,
+.reset-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 209, 102, 0.55);
+}
+
+.chip.is-active {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.22), rgba(82, 227, 194, 0.16));
+  border-color: rgba(255, 209, 102, 0.8);
+  color: #fff5d6;
+}
+
+.progress-track {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mint), var(--accent), var(--accent-strong));
+}
+
+.prompt-box {
+  min-height: 180px;
+  border-radius: 24px;
+  padding: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+.prompt-box span {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.prompt-box .is-correct {
+  color: var(--mint);
+}
+
+.prompt-box .is-wrong {
+  color: var(--danger);
+  background: rgba(255, 107, 107, 0.12);
+  border-radius: 6px;
+}
+
+.input-wrap {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 20px;
+}
+
+.input-wrap textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 132px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  padding: 18px 20px;
+  background: rgba(7, 10, 14, 0.76);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.65;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.input-wrap textarea:focus {
+  border-color: rgba(82, 227, 194, 0.72);
+  box-shadow: 0 0 0 4px rgba(82, 227, 194, 0.14);
+}
+
+.input-wrap textarea:disabled {
+  opacity: 0.72;
+}
+
+.status {
+  margin: 0;
+}
+
+.reset-button {
+  font-weight: 500;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.stat-panel {
+  border-radius: 22px;
+}
+
+.stat-panel.accent {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(255, 140, 66, 0.16));
+}
+
+@media (max-width: 920px) {
+  .hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-metrics,
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  #app {
+    padding: 18px 14px 28px;
+  }
+
+  .hero-panel,
+  .game-panel {
+    border-radius: 24px;
+    padding: 18px;
+  }
+
+  .hero-metrics,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar,
+  .status-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .reset-button {
+    width: 100%;
+  }
+}
