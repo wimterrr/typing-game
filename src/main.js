@@ -151,7 +151,7 @@ const DIFFICULTY = {
 
 const app = document.querySelector('#app')
 const refs = {}
-const STAGE_SIZE = 10
+const PACE_STEP_SIZE = 10
 
 const state = {
   mode: 'ko',
@@ -172,8 +172,6 @@ const state = {
   misses: 0,
   lives: 5,
   nextWordId: 1,
-  stageNotice: '',
-  stageNoticeTimer: null,
 }
 
 function normalizeText(value) {
@@ -196,23 +194,8 @@ function getArenaHeight() {
   return refs.arena?.clientHeight || 420
 }
 
-function getStage() {
-  return Math.floor(state.cleared / STAGE_SIZE) + 1
-}
-
-function getWordsUntilNextStage() {
-  const remainder = state.cleared % STAGE_SIZE
-  return remainder === 0 ? STAGE_SIZE : STAGE_SIZE - remainder
-}
-
-function showStageNotice(message) {
-  clearTimeout(state.stageNoticeTimer)
-  state.stageNotice = message
-  render()
-  state.stageNoticeTimer = window.setTimeout(() => {
-    state.stageNotice = ''
-    render()
-  }, 1800)
+function getPaceStep() {
+  return Math.floor(state.cleared / PACE_STEP_SIZE)
 }
 
 function getStatusText() {
@@ -245,9 +228,6 @@ function resetGame() {
   state.misses = 0
   state.lives = 5
   state.nextWordId = 1
-  state.stageNotice = ''
-  clearTimeout(state.stageNoticeTimer)
-  state.stageNoticeTimer = null
 }
 
 function startGame() {
@@ -271,7 +251,7 @@ function finishGame() {
 
 function spawnWord() {
   const arenaWidth = getArenaWidth()
-  const stageBoost = (getStage() - 1) * 10
+  const paceBoost = getPaceStep() * 10
   const difficulty = DIFFICULTY[state.difficulty]
   const text = randomFrom(getWordPool())
   const widthEstimate = Math.max(72, text.length * 22 + 24)
@@ -282,7 +262,7 @@ function spawnWord() {
     text,
     x: 12 + Math.random() * maxX,
     y: -24,
-    speed: difficulty.minSpeed + Math.random() * (difficulty.maxSpeed - difficulty.minSpeed) + stageBoost,
+    speed: difficulty.minSpeed + Math.random() * (difficulty.maxSpeed - difficulty.minSpeed) + paceBoost,
   })
 
   state.nextWordId += 1
@@ -293,7 +273,6 @@ function removeWord(id) {
 }
 
 function handleSuccessfulHit(word) {
-  const previousStage = getStage()
   const matchedWords = state.words.filter((item) => normalizeText(item.text) === normalizeText(word.text))
   state.words = state.words.filter((item) => normalizeText(item.text) !== normalizeText(word.text))
   const clearedCount = matchedWords.length
@@ -301,15 +280,9 @@ function handleSuccessfulHit(word) {
   state.cleared += clearedCount
   state.combo += 1
   state.bestCombo = Math.max(state.bestCombo, state.combo)
-  state.score += clearedCount * (word.text.length * 10 + getStage() * 8) + state.combo * 2
+  state.score += clearedCount * (word.text.length * 10 + (getPaceStep() + 1) * 8) + state.combo * 2
   state.currentInput = ''
   refs.input.value = ''
-
-  if (getStage() > previousStage) {
-    state.score += previousStage * 60
-    showStageNotice(`STAGE ${previousStage} CLEAR`)
-    return
-  }
 
   render()
 }
@@ -356,7 +329,7 @@ function tick(now) {
   state.spawnAccumulator += delta
 
   const difficulty = DIFFICULTY[state.difficulty]
-  const spawnMs = Math.max(260, difficulty.spawnMs - (getStage() - 1) * 90)
+  const spawnMs = Math.max(260, difficulty.spawnMs - getPaceStep() * 90)
 
   if (state.spawnAccumulator >= spawnMs) {
     state.spawnAccumulator = 0
@@ -419,12 +392,9 @@ function render() {
   refs.bestCombo.textContent = String(state.bestCombo)
   refs.cleared.textContent = String(state.cleared)
   refs.lives.textContent = String(state.lives)
-  refs.level.textContent = String(getStage())
+  refs.difficultyLabel.textContent = DIFFICULTY[state.difficulty].label
   refs.status.textContent = getStatusText()
   refs.resetButton.textContent = state.finished ? '다시 시작' : '리셋'
-  refs.stageBanner.textContent = state.stageNotice
-  refs.stageBanner.classList.toggle('is-visible', Boolean(state.stageNotice))
-  refs.stageGoal.textContent = `${getWordsUntilNextStage()} 단어 남음`
   refs.modeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
   })
@@ -464,8 +434,8 @@ function renderShell() {
             <strong id="lives"></strong>
           </div>
           <div class="metric-card">
-            <span>스테이지</span>
-            <strong id="level"></strong>
+            <span>제거</span>
+            <strong id="cleared"></strong>
           </div>
         </div>
       </section>
@@ -488,10 +458,8 @@ function renderShell() {
           <div class="arena-hud">
             <span>콤보 <strong id="combo"></strong></span>
             <span>최고 콤보 <strong id="best-combo"></strong></span>
-            <span>제거 단어 <strong id="cleared"></strong></span>
-            <span>다음 스테이지 <strong id="stage-goal"></strong></span>
+            <span>난이도 <strong id="difficulty-label"></strong></span>
           </div>
-          <div class="stage-banner" id="stage-banner"></div>
           <div class="arena" id="arena"></div>
         </div>
 
@@ -519,12 +487,10 @@ function renderShell() {
 
   refs.score = document.querySelector('#score')
   refs.lives = document.querySelector('#lives')
-  refs.level = document.querySelector('#level')
+  refs.difficultyLabel = document.querySelector('#difficulty-label')
   refs.combo = document.querySelector('#combo')
   refs.bestCombo = document.querySelector('#best-combo')
   refs.cleared = document.querySelector('#cleared')
-  refs.stageGoal = document.querySelector('#stage-goal')
-  refs.stageBanner = document.querySelector('#stage-banner')
   refs.arena = document.querySelector('#arena')
   refs.input = document.querySelector('#typing-input')
   refs.status = document.querySelector('#status-text')
