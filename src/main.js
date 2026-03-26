@@ -336,6 +336,10 @@ function renderShell() {
     <main class="shell">
       <section class="hero-panel">
         <div class="hero-copy">
+          <div class="mode-links">
+            <a class="mode-link" href="/">산성비</a>
+            <a class="mode-link" href="/classic.html">클래식</a>
+          </div>
           <p class="eyebrow">ACID RAIN TYPING</p>
           <h1>Key Tempo</h1>
           <p class="hero-text">위에서 떨어지는 단어를 그대로 입력해서 지우는 산성비 스타일 타자게임.</p>
