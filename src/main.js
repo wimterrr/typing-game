@@ -44,6 +44,7 @@ const state = {
   score: 0,
   startedAt: null,
   lineHadMistake: false,
+  isComposing: false,
 }
 
 const bestScoreKey = 'key-tempo-best-score'
@@ -128,6 +129,7 @@ function resetMetrics() {
   state.score = 0
   state.startedAt = null
   state.lineHadMistake = false
+  state.isComposing = false
   state.currentText = pickText(state.mode, state.currentText)
   clearInterval(state.timerId)
   state.timerId = null
@@ -148,7 +150,9 @@ function startTimer() {
       return
     }
 
-    render()
+    if (!state.isComposing) {
+      render()
+    }
   }, 1000)
 }
 
@@ -238,6 +242,28 @@ function bindEvents() {
     const target = event.target
 
     if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
+      if (state.isComposing) {
+        state.currentInput = target.value
+        return
+      }
+
+      handleInput(target.value)
+    }
+  })
+
+  app.addEventListener('compositionstart', (event) => {
+    const target = event.target
+
+    if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
+      state.isComposing = true
+    }
+  })
+
+  app.addEventListener('compositionend', (event) => {
+    const target = event.target
+
+    if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
+      state.isComposing = false
       handleInput(target.value)
     }
   })
@@ -265,7 +291,7 @@ function render() {
   const bestScore = getBestScore()
   const accuracy = getAccuracy()
   const speed = getSpeed()
-  const shouldRefocus = document.activeElement instanceof HTMLTextAreaElement
+  const shouldRefocus = document.activeElement instanceof HTMLTextAreaElement && !state.isComposing
   const status = state.finished
     ? '시간 종료. 다시 눌러 최고 점수를 갱신해보세요.'
     : state.running
