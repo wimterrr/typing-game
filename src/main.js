@@ -144,7 +144,7 @@ const WORD_BANK = {
 }
 
 const DIFFICULTY = {
-  mobile: { label: '핸드폰 버전', spawnMs: 2200, minSpeed: 22, maxSpeed: 34, scoreMultiplier: 1.35 },
+  mobile: { label: '핸드폰', spawnMs: 2200, minSpeed: 22, maxSpeed: 34, scoreMultiplier: 1.35 },
   easy: { label: '순한 비', spawnMs: 1500, minSpeed: 36, maxSpeed: 58, scoreMultiplier: 1 },
   normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82, scoreMultiplier: 1 },
   hard: { label: '폭우', spawnMs: 700, minSpeed: 80, maxSpeed: 118, scoreMultiplier: 1 },
