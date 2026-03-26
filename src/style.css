@@ -103,7 +103,7 @@ a {
 
 .hero-panel {
   border-radius: 28px;
-  padding: 28px;
+  padding: 22px 24px;
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 20px;
@@ -124,7 +124,7 @@ a {
 .mode-links {
   display: flex;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
@@ -143,20 +143,20 @@ a {
   margin: 0;
   color: var(--accent);
   letter-spacing: 0.28em;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
 }
 
 h1 {
-  margin: 10px 0 12px;
-  font-size: clamp(3rem, 7vw, 5.6rem);
-  line-height: 0.92;
+  margin: 6px 0 10px;
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  line-height: 0.9;
 }
 
 .hero-text {
   max-width: 32rem;
   margin: 0;
   color: var(--text-soft);
-  font-size: 1.02rem;
+  font-size: 0.96rem;
 }
 
 .hero-metrics {
@@ -169,7 +169,7 @@ h1 {
 .metric-card,
 .stat-panel {
   border-radius: 20px;
-  padding: 18px;
+  padding: 16px;
 }
 
 .metric-card {
@@ -187,14 +187,14 @@ h1 {
 .metric-card span,
 .stat-panel span {
   display: block;
-  margin-bottom: 8px;
-  font-size: 0.92rem;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
 }
 
 .metric-card strong,
 .stat-panel strong {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-size: clamp(1.1rem, 2.4vw, 1.7rem);
 }
 
 .game-panel {
