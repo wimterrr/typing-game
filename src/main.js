@@ -272,11 +272,14 @@ function removeWord(id) {
 }
 
 function handleSuccessfulHit(word) {
-  removeWord(word.id)
-  state.cleared += 1
+  const matchedWords = state.words.filter((item) => normalizeText(item.text) === normalizeText(word.text))
+  state.words = state.words.filter((item) => normalizeText(item.text) !== normalizeText(word.text))
+  const clearedCount = matchedWords.length
+
+  state.cleared += clearedCount
   state.combo += 1
   state.bestCombo = Math.max(state.bestCombo, state.combo)
-  state.score += word.text.length * 10 + getLevel() * 8 + state.combo * 2
+  state.score += clearedCount * (word.text.length * 10 + getLevel() * 8) + state.combo * 2
   state.currentInput = ''
   refs.input.value = ''
   render()
