@@ -24,7 +24,9 @@ const TEXT_BANK = {
   ],
 }
 
+const bestScoreKey = 'key-tempo-best-score'
 const app = document.querySelector('#app')
+const refs = {}
 
 const state = {
   mode: 'ko',
@@ -47,8 +49,6 @@ const state = {
   isComposing: false,
 }
 
-const bestScoreKey = 'key-tempo-best-score'
-
 function getBestScore() {
   return Number(window.localStorage.getItem(bestScoreKey) || 0)
 }
@@ -59,15 +59,15 @@ function setBestScore(score) {
   return next
 }
 
+function normalizeText(value) {
+  return value.normalize('NFC')
+}
+
 function pickText(mode, previous) {
   const bank = TEXT_BANK[mode]
   const filtered = bank.filter((text) => text !== previous)
   const pool = filtered.length > 0 ? filtered : bank
   return normalizeText(pool[Math.floor(Math.random() * pool.length)])
-}
-
-function normalizeText(value) {
-  return value.normalize('NFC')
 }
 
 function formatTime(value) {
@@ -91,6 +91,15 @@ function getProgress() {
   return Math.max(0, Math.min(100, Math.round(((state.duration - state.timeLeft) / state.duration) * 100)))
 }
 
+function escapeHtml(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
 function buildHighlightedText() {
   return state.currentText
     .split('')
@@ -108,15 +117,6 @@ function buildHighlightedText() {
       return `<span class="is-wrong">${escapeHtml(char)}</span>`
     })
     .join('')
-}
-
-function escapeHtml(value) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;')
 }
 
 function resetMetrics() {
@@ -154,9 +154,7 @@ function startTimer() {
       return
     }
 
-    if (!state.isComposing) {
-      render()
-    }
+    render()
   }, 1000)
 }
 
@@ -170,21 +168,21 @@ function finishGame() {
   render()
 }
 
-function handleInput(value) {
-  const normalizedValue = normalizeText(value)
+function handleInput(rawValue) {
+  const value = normalizeText(rawValue)
 
   if (state.finished) {
     return
   }
 
-  if (!state.running && normalizedValue.length > 0) {
+  if (!state.running && value.length > 0) {
     startTimer()
   }
 
   const previousInput = state.currentInput
 
-  if (normalizedValue.length > previousInput.length) {
-    normalizedValue
+  if (value.length > previousInput.length) {
+    value
       .slice(previousInput.length)
       .split('')
       .forEach((char, offset) => {
@@ -200,9 +198,9 @@ function handleInput(value) {
       })
   }
 
-  state.currentInput = normalizedValue
+  state.currentInput = value
 
-  if (normalizedValue === state.currentText) {
+  if (value === state.currentText) {
     state.completed += 1
     state.combo = state.lineHadMistake ? 0 : state.combo + 1
     state.bestCombo = Math.max(state.bestCombo, state.combo)
@@ -213,6 +211,123 @@ function handleInput(value) {
   }
 
   render()
+}
+
+function focusInput() {
+  if (!state.finished) {
+    refs.input.focus()
+  }
+}
+
+function renderShell() {
+  app.innerHTML = `
+    <main class="shell">
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">ARCADE TYPING</p>
+          <h1>Key Tempo</h1>
+          <p class="hero-text">웹에 바로 올릴 수 있는, 한국어와 영어를 섞은 반응형 타자게임.</p>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <span>남은 시간</span>
+            <strong id="time-left"></strong>
+          </div>
+          <div class="metric-card">
+            <span>속도</span>
+            <strong id="speed"></strong>
+          </div>
+          <div class="metric-card">
+            <span>정확도</span>
+            <strong id="accuracy"></strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-panel">
+        <div class="toolbar">
+          <div class="chip-group">
+            <button class="chip" data-mode="ko">한글</button>
+            <button class="chip" data-mode="en">영문</button>
+            <button class="chip" data-mode="mixed">믹스</button>
+          </div>
+          <div class="chip-group">
+            <button class="chip" data-duration="30">30초</button>
+            <button class="chip" data-duration="60">60초</button>
+            <button class="chip" data-duration="90">90초</button>
+          </div>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="prompt-box" id="prompt-box" aria-live="polite"></div>
+
+        <label class="input-wrap" for="typing-input">
+          <span>입력창</span>
+          <textarea
+            id="typing-input"
+            rows="4"
+            placeholder="여기에 그대로 입력하세요"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          ></textarea>
+        </label>
+
+        <div class="status-row">
+          <p class="status" id="status-text"></p>
+          <button class="reset-button" id="reset-button" data-action="restart">리셋</button>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-panel">
+          <span>점수</span>
+          <strong id="score"></strong>
+        </article>
+        <article class="stat-panel">
+          <span>완료 문장</span>
+          <strong id="completed"></strong>
+        </article>
+        <article class="stat-panel">
+          <span>현재 콤보</span>
+          <strong id="combo"></strong>
+        </article>
+        <article class="stat-panel">
+          <span>최고 콤보</span>
+          <strong id="best-combo"></strong>
+        </article>
+        <article class="stat-panel">
+          <span>실수</span>
+          <strong id="mistakes"></strong>
+        </article>
+        <article class="stat-panel accent">
+          <span>베스트 점수</span>
+          <strong id="best-score"></strong>
+        </article>
+      </section>
+    </main>
+  `
+
+  refs.timeLeft = document.querySelector('#time-left')
+  refs.speed = document.querySelector('#speed')
+  refs.accuracy = document.querySelector('#accuracy')
+  refs.progressBar = document.querySelector('#progress-bar')
+  refs.promptBox = document.querySelector('#prompt-box')
+  refs.input = document.querySelector('#typing-input')
+  refs.statusText = document.querySelector('#status-text')
+  refs.resetButton = document.querySelector('#reset-button')
+  refs.score = document.querySelector('#score')
+  refs.completed = document.querySelector('#completed')
+  refs.combo = document.querySelector('#combo')
+  refs.bestCombo = document.querySelector('#best-combo')
+  refs.mistakes = document.querySelector('#mistakes')
+  refs.bestScore = document.querySelector('#best-score')
+  refs.modeButtons = [...document.querySelectorAll('[data-mode]')]
+  refs.durationButtons = [...document.querySelectorAll('[data-duration]')]
 }
 
 function bindEvents() {
@@ -244,34 +359,21 @@ function bindEvents() {
     }
   })
 
-  app.addEventListener('input', (event) => {
-    const target = event.target
-
-    if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
-      if (state.isComposing) {
-        state.currentInput = target.value
-        return
-      }
-
-      handleInput(target.value)
-    }
+  refs.input.addEventListener('compositionstart', () => {
+    state.isComposing = true
   })
 
-  app.addEventListener('compositionstart', (event) => {
-    const target = event.target
-
-    if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
-      state.isComposing = true
-    }
+  refs.input.addEventListener('compositionend', (event) => {
+    state.isComposing = false
+    handleInput(event.target.value)
   })
 
-  app.addEventListener('compositionend', (event) => {
-    const target = event.target
-
-    if (target instanceof HTMLTextAreaElement && target.id === 'typing-input') {
-      state.isComposing = false
-      handleInput(target.value)
+  refs.input.addEventListener('input', (event) => {
+    if (state.isComposing) {
+      return
     }
+
+    handleInput(event.target.value)
   })
 
   app.addEventListener('keydown', (event) => {
@@ -285,130 +387,44 @@ function bindEvents() {
   })
 }
 
-function focusInput() {
-  const input = document.querySelector('#typing-input')
-
-  if (input instanceof HTMLTextAreaElement && !state.finished) {
-    input.focus()
-  }
-}
-
 function render() {
   const bestScore = getBestScore()
-  const accuracy = getAccuracy()
-  const speed = getSpeed()
-  const shouldRefocus = document.activeElement instanceof HTMLTextAreaElement && !state.isComposing
   const status = state.finished
     ? '시간 종료. 다시 눌러 최고 점수를 갱신해보세요.'
     : state.running
       ? '리듬을 유지하세요. 실수하면 콤보가 끊깁니다.'
       : '입력을 시작하는 순간 타이머가 작동합니다.'
 
-  app.innerHTML = `
-    <main class="shell">
-      <section class="hero-panel">
-        <div class="hero-copy">
-          <p class="eyebrow">ARCADE TYPING</p>
-          <h1>Key Tempo</h1>
-          <p class="hero-text">웹에 바로 올릴 수 있는, 한국어와 영어를 섞은 반응형 타자게임.</p>
-        </div>
-        <div class="hero-metrics">
-          <div class="metric-card">
-            <span>남은 시간</span>
-            <strong>${formatTime(state.timeLeft)}</strong>
-          </div>
-          <div class="metric-card">
-            <span>속도</span>
-            <strong>${speed} WPM</strong>
-          </div>
-          <div class="metric-card">
-            <span>정확도</span>
-            <strong>${accuracy}%</strong>
-          </div>
-        </div>
-      </section>
+  refs.timeLeft.textContent = formatTime(state.timeLeft)
+  refs.speed.textContent = `${getSpeed()} WPM`
+  refs.accuracy.textContent = `${getAccuracy()}%`
+  refs.progressBar.style.width = `${getProgress()}%`
+  refs.promptBox.innerHTML = buildHighlightedText()
+  refs.statusText.textContent = status
+  refs.resetButton.textContent = state.finished ? '다시 시작' : '리셋'
+  refs.score.textContent = String(state.score)
+  refs.completed.textContent = String(state.completed)
+  refs.combo.textContent = String(state.combo)
+  refs.bestCombo.textContent = String(state.bestCombo)
+  refs.mistakes.textContent = String(state.mistakes)
+  refs.bestScore.textContent = String(Math.max(bestScore, state.score))
 
-      <section class="game-panel">
-        <div class="toolbar">
-          <div class="chip-group">
-            <button class="chip ${state.mode === 'ko' ? 'is-active' : ''}" data-mode="ko">한글</button>
-            <button class="chip ${state.mode === 'en' ? 'is-active' : ''}" data-mode="en">영문</button>
-            <button class="chip ${state.mode === 'mixed' ? 'is-active' : ''}" data-mode="mixed">믹스</button>
-          </div>
-          <div class="chip-group">
-            <button class="chip ${state.duration === 30 ? 'is-active' : ''}" data-duration="30">30초</button>
-            <button class="chip ${state.duration === 60 ? 'is-active' : ''}" data-duration="60">60초</button>
-            <button class="chip ${state.duration === 90 ? 'is-active' : ''}" data-duration="90">90초</button>
-          </div>
-        </div>
+  refs.modeButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.mode === state.mode)
+  })
 
-        <div class="progress-track" aria-hidden="true">
-          <div class="progress-bar" style="width: ${getProgress()}%"></div>
-        </div>
+  refs.durationButtons.forEach((button) => {
+    button.classList.toggle('is-active', Number(button.dataset.duration) === state.duration)
+  })
 
-        <div class="prompt-box" aria-live="polite">${buildHighlightedText()}</div>
+  refs.input.disabled = state.finished
 
-        <label class="input-wrap" for="typing-input">
-          <span>입력창</span>
-          <textarea
-            id="typing-input"
-            rows="4"
-            placeholder="여기에 그대로 입력하세요"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            ${state.finished ? 'disabled' : ''}
-          ></textarea>
-        </label>
-
-        <div class="status-row">
-          <p class="status">${status}</p>
-          <button class="reset-button" data-action="restart">${state.finished ? '다시 시작' : '리셋'}</button>
-        </div>
-      </section>
-
-      <section class="stats-grid">
-        <article class="stat-panel">
-          <span>점수</span>
-          <strong>${state.score}</strong>
-        </article>
-        <article class="stat-panel">
-          <span>완료 문장</span>
-          <strong>${state.completed}</strong>
-        </article>
-        <article class="stat-panel">
-          <span>현재 콤보</span>
-          <strong>${state.combo}</strong>
-        </article>
-        <article class="stat-panel">
-          <span>최고 콤보</span>
-          <strong>${state.bestCombo}</strong>
-        </article>
-        <article class="stat-panel">
-          <span>실수</span>
-          <strong>${state.mistakes}</strong>
-        </article>
-        <article class="stat-panel accent">
-          <span>베스트 점수</span>
-          <strong>${Math.max(bestScore, state.score)}</strong>
-        </article>
-      </section>
-    </main>
-  `
-
-  const input = document.querySelector('#typing-input')
-
-  if (input instanceof HTMLTextAreaElement) {
-    input.value = state.currentInput
-
-    if (shouldRefocus && !state.finished) {
-      input.focus()
-      input.setSelectionRange(input.value.length, input.value.length)
-    }
+  if (!state.isComposing && refs.input.value !== state.currentInput) {
+    refs.input.value = state.currentInput
   }
 }
 
-resetMetrics()
+renderShell()
 bindEvents()
+resetMetrics()
 render()
