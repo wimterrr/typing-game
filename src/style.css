@@ -295,6 +295,23 @@ h1 {
   background-size: auto, 28px 28px, 28px 28px, auto;
 }
 
+.stage-banner {
+  margin-bottom: 12px;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  color: #fff4f7;
+}
+
+.stage-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .arena::after {
   content: '';
   position: absolute;

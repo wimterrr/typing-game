@@ -151,6 +151,7 @@ const DIFFICULTY = {
 
 const app = document.querySelector('#app')
 const refs = {}
+const STAGE_SIZE = 10
 
 const state = {
   mode: 'ko',
@@ -171,6 +172,8 @@ const state = {
   misses: 0,
   lives: 5,
   nextWordId: 1,
+  stageNotice: '',
+  stageNoticeTimer: null,
 }
 
 function normalizeText(value) {
@@ -194,7 +197,22 @@ function getArenaHeight() {
 }
 
 function getStage() {
-  return Math.floor(state.cleared / 10) + 1
+  return Math.floor(state.cleared / STAGE_SIZE) + 1
+}
+
+function getWordsUntilNextStage() {
+  const remainder = state.cleared % STAGE_SIZE
+  return remainder === 0 ? STAGE_SIZE : STAGE_SIZE - remainder
+}
+
+function showStageNotice(message) {
+  clearTimeout(state.stageNoticeTimer)
+  state.stageNotice = message
+  render()
+  state.stageNoticeTimer = window.setTimeout(() => {
+    state.stageNotice = ''
+    render()
+  }, 1800)
 }
 
 function getStatusText() {
@@ -227,6 +245,9 @@ function resetGame() {
   state.misses = 0
   state.lives = 5
   state.nextWordId = 1
+  state.stageNotice = ''
+  clearTimeout(state.stageNoticeTimer)
+  state.stageNoticeTimer = null
 }
 
 function startGame() {
@@ -272,6 +293,7 @@ function removeWord(id) {
 }
 
 function handleSuccessfulHit(word) {
+  const previousStage = getStage()
   const matchedWords = state.words.filter((item) => normalizeText(item.text) === normalizeText(word.text))
   state.words = state.words.filter((item) => normalizeText(item.text) !== normalizeText(word.text))
   const clearedCount = matchedWords.length
@@ -282,6 +304,13 @@ function handleSuccessfulHit(word) {
   state.score += clearedCount * (word.text.length * 10 + getStage() * 8) + state.combo * 2
   state.currentInput = ''
   refs.input.value = ''
+
+  if (getStage() > previousStage) {
+    state.score += previousStage * 60
+    showStageNotice(`STAGE ${previousStage} CLEAR`)
+    return
+  }
+
   render()
 }
 
@@ -393,6 +422,9 @@ function render() {
   refs.level.textContent = String(getStage())
   refs.status.textContent = getStatusText()
   refs.resetButton.textContent = state.finished ? '다시 시작' : '리셋'
+  refs.stageBanner.textContent = state.stageNotice
+  refs.stageBanner.classList.toggle('is-visible', Boolean(state.stageNotice))
+  refs.stageGoal.textContent = `${getWordsUntilNextStage()} 단어 남음`
   refs.modeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
   })
@@ -457,7 +489,9 @@ function renderShell() {
             <span>콤보 <strong id="combo"></strong></span>
             <span>최고 콤보 <strong id="best-combo"></strong></span>
             <span>제거 단어 <strong id="cleared"></strong></span>
+            <span>다음 스테이지 <strong id="stage-goal"></strong></span>
           </div>
+          <div class="stage-banner" id="stage-banner"></div>
           <div class="arena" id="arena"></div>
         </div>
 
@@ -489,6 +523,8 @@ function renderShell() {
   refs.combo = document.querySelector('#combo')
   refs.bestCombo = document.querySelector('#best-combo')
   refs.cleared = document.querySelector('#cleared')
+  refs.stageGoal = document.querySelector('#stage-goal')
+  refs.stageBanner = document.querySelector('#stage-banner')
   refs.arena = document.querySelector('#arena')
   refs.input = document.querySelector('#typing-input')
   refs.status = document.querySelector('#status-text')
