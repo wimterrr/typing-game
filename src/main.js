@@ -63,7 +63,11 @@ function pickText(mode, previous) {
   const bank = TEXT_BANK[mode]
   const filtered = bank.filter((text) => text !== previous)
   const pool = filtered.length > 0 ? filtered : bank
-  return pool[Math.floor(Math.random() * pool.length)]
+  return normalizeText(pool[Math.floor(Math.random() * pool.length)])
+}
+
+function normalizeText(value) {
+  return value.normalize('NFC')
 }
 
 function formatTime(value) {
@@ -167,18 +171,20 @@ function finishGame() {
 }
 
 function handleInput(value) {
+  const normalizedValue = normalizeText(value)
+
   if (state.finished) {
     return
   }
 
-  if (!state.running && value.length > 0) {
+  if (!state.running && normalizedValue.length > 0) {
     startTimer()
   }
 
   const previousInput = state.currentInput
 
-  if (value.length > previousInput.length) {
-    value
+  if (normalizedValue.length > previousInput.length) {
+    normalizedValue
       .slice(previousInput.length)
       .split('')
       .forEach((char, offset) => {
@@ -194,9 +200,9 @@ function handleInput(value) {
       })
   }
 
-  state.currentInput = value
+  state.currentInput = normalizedValue
 
-  if (value === state.currentText) {
+  if (normalizedValue === state.currentText) {
     state.completed += 1
     state.combo = state.lineHadMistake ? 0 : state.combo + 1
     state.bestCombo = Math.max(state.bestCombo, state.combo)
