@@ -1,0 +1,62 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="97" y1="38" x2="1077" y2="601" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1D1728"/>
+      <stop offset="0.52" stop-color="#101723"/>
+      <stop offset="1" stop-color="#090B11"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(247 122) rotate(36.7822) scale(293.898 227.98)">
+      <stop stop-color="#FF6A89" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#FF6A89" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1018 180) rotate(119.759) scale(321.404 312.563)">
+      <stop stop-color="#6FD3FF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#6FD3FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowA)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowB)"/>
+
+  <g opacity="0.14">
+    <path d="M0 95.5H1200" stroke="white"/>
+    <path d="M0 191.5H1200" stroke="white"/>
+    <path d="M0 287.5H1200" stroke="white"/>
+    <path d="M0 383.5H1200" stroke="white"/>
+    <path d="M0 479.5H1200" stroke="white"/>
+    <path d="M0 575.5H1200" stroke="white"/>
+    <path d="M171.5 0V630" stroke="white"/>
+    <path d="M343.5 0V630" stroke="white"/>
+    <path d="M515.5 0V630" stroke="white"/>
+    <path d="M687.5 0V630" stroke="white"/>
+    <path d="M859.5 0V630" stroke="white"/>
+    <path d="M1031.5 0V630" stroke="white"/>
+  </g>
+
+  <rect x="66" y="60" width="154" height="58" rx="29" fill="#F8F4EC" fill-opacity="0.08" stroke="white" stroke-opacity="0.16"/>
+  <rect x="236" y="60" width="154" height="58" rx="29" fill="#F8F4EC" fill-opacity="0.06" stroke="white" stroke-opacity="0.14"/>
+  <text x="115" y="96" fill="#F8F4EC" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif" font-weight="700" text-anchor="middle">산성비</text>
+  <text x="313" y="96" fill="#C9C3D5" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif" font-weight="700" text-anchor="middle">클래식</text>
+
+  <text x="72" y="170" fill="#FF92AC" font-size="28" font-family="IBM Plex Mono, monospace" letter-spacing="10">ACID RAIN TYPING</text>
+  <text x="72" y="336" fill="#F8F4EC" font-size="128" font-family="Space Grotesk, Pretendard, sans-serif" font-weight="700">Key Tempo</text>
+  <text x="74" y="408" fill="#C9C3D5" font-size="34" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif">
+    밈, 신조어, 팬덤어까지 섞인 아케이드 타자게임
+  </text>
+  <text x="74" y="456" fill="#A6B0C3" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif">
+    핸드폰 · 순한 비 · 산성비 · 폭우
+  </text>
+
+  <rect x="740" y="216" width="156" height="170" rx="28" fill="#F8F4EC" fill-opacity="0.06" stroke="white" stroke-opacity="0.12"/>
+  <rect x="918" y="216" width="156" height="170" rx="28" fill="#F8F4EC" fill-opacity="0.06" stroke="white" stroke-opacity="0.12"/>
+  <rect x="1092" y="216" width="42" height="170" rx="21" fill="#FF6A89" fill-opacity="0.16"/>
+  <text x="772" y="274" fill="#C9C3D5" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif">점수</text>
+  <text x="772" y="354" fill="#F8F4EC" font-size="74" font-family="IBM Plex Mono, monospace" font-weight="700">1280</text>
+  <text x="950" y="274" fill="#C9C3D5" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif">콤보</text>
+  <text x="950" y="354" fill="#F8F4EC" font-size="74" font-family="IBM Plex Mono, monospace" font-weight="700">17</text>
+
+  <rect x="734" y="454" width="354" height="82" rx="26" fill="#070A0E" fill-opacity="0.82" stroke="white" stroke-opacity="0.1"/>
+  <text x="770" y="505" fill="#9AA5BA" font-size="28" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif">입력</text>
+  <text x="860" y="505" fill="#F8F4EC" font-size="36" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif" font-weight="700">알잘딱깔센</text>
+</svg>
