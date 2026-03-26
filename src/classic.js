@@ -246,6 +246,9 @@ function handleInput(rawValue) {
 function focusInput() {
   if (!state.finished) {
     refs.input.focus()
+    window.setTimeout(() => {
+      refs.input.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    }, 120)
   }
 }
 
@@ -298,22 +301,25 @@ function renderShell() {
 
         <div class="prompt-box" id="prompt-box" aria-live="polite"></div>
 
-        <label class="input-wrap" for="typing-input">
-          <span>입력창</span>
-          <textarea
-            id="typing-input"
-            rows="4"
-            placeholder="여기에 그대로 입력하세요"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-          ></textarea>
-        </label>
+        <div class="mobile-dock">
+          <label class="input-wrap" for="typing-input">
+            <span>입력창</span>
+            <textarea
+              id="typing-input"
+              rows="4"
+              enterkeyhint="enter"
+              placeholder="여기에 그대로 입력하세요"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            ></textarea>
+          </label>
 
-        <div class="status-row">
-          <p class="status" id="status-text"></p>
-          <button class="reset-button" id="reset-button" data-action="restart">리셋</button>
+          <div class="status-row">
+            <p class="status" id="status-text"></p>
+            <button class="reset-button" id="reset-button" data-action="restart">리셋</button>
+          </div>
         </div>
       </section>
 
@@ -408,6 +414,16 @@ function bindEvents() {
     }
 
     handleInput(event.target.value)
+  })
+
+  refs.promptBox.addEventListener('pointerdown', (event) => {
+    const target = event.target
+
+    if (target instanceof HTMLElement && target.closest('button, textarea, a')) {
+      return
+    }
+
+    focusInput()
   })
 
   app.addEventListener('keydown', (event) => {

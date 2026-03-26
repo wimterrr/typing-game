@@ -29,6 +29,7 @@
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body::before,
@@ -70,7 +71,8 @@ a {
 
 #app {
   min-height: 100vh;
-  padding: 32px 20px 48px;
+  min-height: 100dvh;
+  padding: 32px 20px calc(48px + env(safe-area-inset-bottom, 0px));
   position: relative;
 }
 
@@ -335,6 +337,10 @@ h1 {
   margin: 18px 0 20px;
 }
 
+.mobile-dock {
+  position: relative;
+}
+
 .typing-input {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -393,7 +399,7 @@ h1 {
 
 @media (max-width: 640px) {
   #app {
-    padding: 18px 14px 28px;
+    padding: 18px 14px calc(28px + env(safe-area-inset-bottom, 0px));
   }
 
   .hero-panel,
@@ -413,11 +419,54 @@ h1 {
     flex-direction: column;
   }
 
+  .chip-group {
+    width: 100%;
+  }
+
+  .chip {
+    flex: 1 1 calc(33.333% - 8px);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .arena-shell {
+    padding: 12px;
+  }
+
+  .arena-hud {
+    gap: 10px 14px;
+    font-size: 0.84rem;
+  }
+
   .reset-button {
     width: 100%;
   }
 
   .arena {
     min-height: 360px;
+  }
+
+  .mobile-dock {
+    position: sticky;
+    bottom: 10px;
+    z-index: 4;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 24px;
+    background:
+      linear-gradient(160deg, rgba(7, 10, 14, 0.94), rgba(7, 10, 14, 0.84)),
+      rgba(7, 10, 14, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(18px);
+  }
+
+  .input-wrap {
+    margin: 0 0 14px;
+  }
+
+  .typing-input {
+    font-size: 16px;
+    padding: 16px 18px;
   }
 }

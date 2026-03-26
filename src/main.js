@@ -366,6 +366,9 @@ function tick(now) {
 function focusInput() {
   if (!state.finished) {
     refs.input.focus()
+    window.setTimeout(() => {
+      refs.input.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    }, 120)
   }
 }
 
@@ -454,7 +457,7 @@ function renderShell() {
           </div>
         </div>
 
-        <div class="arena-shell">
+        <div class="arena-shell" id="arena-shell">
           <div class="arena-hud">
             <span>콤보 <strong id="combo"></strong></span>
             <span>최고 콤보 <strong id="best-combo"></strong></span>
@@ -463,23 +466,27 @@ function renderShell() {
           <div class="arena" id="arena"></div>
         </div>
 
-        <label class="input-wrap" for="typing-input">
-          <span>떨어지는 단어 입력</span>
-          <input
-            id="typing-input"
-            class="typing-input"
-            type="text"
-            placeholder="단어를 그대로 입력하세요"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-          />
-        </label>
+        <div class="mobile-dock">
+          <label class="input-wrap" for="typing-input">
+            <span>떨어지는 단어 입력</span>
+            <input
+              id="typing-input"
+              class="typing-input"
+              type="text"
+              inputmode="text"
+              enterkeyhint="done"
+              placeholder="단어를 그대로 입력하세요"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+          </label>
 
-        <div class="status-row">
-          <p class="status" id="status-text"></p>
-          <button class="reset-button" data-action="restart" id="reset-button">리셋</button>
+          <div class="status-row">
+            <p class="status" id="status-text"></p>
+            <button class="reset-button" data-action="restart" id="reset-button">리셋</button>
+          </div>
         </div>
       </section>
     </main>
@@ -491,6 +498,7 @@ function renderShell() {
   refs.combo = document.querySelector('#combo')
   refs.bestCombo = document.querySelector('#best-combo')
   refs.cleared = document.querySelector('#cleared')
+  refs.arenaShell = document.querySelector('#arena-shell')
   refs.arena = document.querySelector('#arena')
   refs.input = document.querySelector('#typing-input')
   refs.status = document.querySelector('#status-text')
@@ -552,6 +560,16 @@ function bindEvents() {
       refs.input.value = ''
       render()
     }
+  })
+
+  refs.arenaShell.addEventListener('pointerdown', (event) => {
+    const target = event.target
+
+    if (target instanceof HTMLElement && target.closest('button, input, a')) {
+      return
+    }
+
+    focusInput()
   })
 
   app.addEventListener('keydown', (event) => {
