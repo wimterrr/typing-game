@@ -193,8 +193,8 @@ function getArenaHeight() {
   return refs.arena?.clientHeight || 420
 }
 
-function getLevel() {
-  return Math.floor(state.cleared / 8) + 1
+function getStage() {
+  return Math.floor(state.cleared / 10) + 1
 }
 
 function getStatusText() {
@@ -250,7 +250,7 @@ function finishGame() {
 
 function spawnWord() {
   const arenaWidth = getArenaWidth()
-  const levelBoost = (getLevel() - 1) * 8
+  const stageBoost = (getStage() - 1) * 10
   const difficulty = DIFFICULTY[state.difficulty]
   const text = randomFrom(getWordPool())
   const widthEstimate = Math.max(72, text.length * 22 + 24)
@@ -261,7 +261,7 @@ function spawnWord() {
     text,
     x: 12 + Math.random() * maxX,
     y: -24,
-    speed: difficulty.minSpeed + Math.random() * (difficulty.maxSpeed - difficulty.minSpeed) + levelBoost,
+    speed: difficulty.minSpeed + Math.random() * (difficulty.maxSpeed - difficulty.minSpeed) + stageBoost,
   })
 
   state.nextWordId += 1
@@ -279,7 +279,7 @@ function handleSuccessfulHit(word) {
   state.cleared += clearedCount
   state.combo += 1
   state.bestCombo = Math.max(state.bestCombo, state.combo)
-  state.score += clearedCount * (word.text.length * 10 + getLevel() * 8) + state.combo * 2
+  state.score += clearedCount * (word.text.length * 10 + getStage() * 8) + state.combo * 2
   state.currentInput = ''
   refs.input.value = ''
   render()
@@ -327,8 +327,9 @@ function tick(now) {
   state.spawnAccumulator += delta
 
   const difficulty = DIFFICULTY[state.difficulty]
+  const spawnMs = Math.max(260, difficulty.spawnMs - (getStage() - 1) * 90)
 
-  if (state.spawnAccumulator >= difficulty.spawnMs) {
+  if (state.spawnAccumulator >= spawnMs) {
     state.spawnAccumulator = 0
     spawnWord()
   }
@@ -389,7 +390,7 @@ function render() {
   refs.bestCombo.textContent = String(state.bestCombo)
   refs.cleared.textContent = String(state.cleared)
   refs.lives.textContent = String(state.lives)
-  refs.level.textContent = String(getLevel())
+  refs.level.textContent = String(getStage())
   refs.status.textContent = getStatusText()
   refs.resetButton.textContent = state.finished ? '다시 시작' : '리셋'
   refs.modeButtons.forEach((button) => {
@@ -431,7 +432,7 @@ function renderShell() {
             <strong id="lives"></strong>
           </div>
           <div class="metric-card">
-            <span>레벨</span>
+            <span>스테이지</span>
             <strong id="level"></strong>
           </div>
         </div>
