@@ -55,6 +55,11 @@ const TEXT_BANK = {
 }
 
 const bestScoreKey = 'key-tempo-classic-best-score'
+const themeStorageKey = 'key-tempo-theme'
+const THEMES = {
+  terminal: '터미널',
+  arcade: '아케이드',
+}
 const app = document.querySelector('#app')
 const refs = {}
 
@@ -74,6 +79,7 @@ const state = {
   combo: 0,
   bestCombo: 0,
   score: 0,
+  theme: getSavedTheme(),
   startedAt: null,
   lineHadMistake: false,
   isComposing: false,
@@ -91,6 +97,17 @@ function setBestScore(score) {
 
 function normalizeText(value) {
   return value.normalize('NFC')
+}
+
+function getSavedTheme() {
+  const value = window.localStorage.getItem(themeStorageKey)
+  return value === 'arcade' ? 'arcade' : 'terminal'
+}
+
+function applyTheme(theme) {
+  document.body.classList.remove('theme-terminal', 'theme-arcade')
+  document.body.classList.add(`theme-${theme}`)
+  window.localStorage.setItem(themeStorageKey, theme)
 }
 
 function pickText(mode, previous) {
@@ -252,6 +269,12 @@ function focusInput() {
   }
 }
 
+function getThemeMarkup() {
+  return Object.entries(THEMES)
+    .map(([key, label]) => `<button class="chip" data-theme="${key}">${label}</button>`)
+    .join('')
+}
+
 function renderShell() {
   app.innerHTML = `
     <main class="shell">
@@ -283,6 +306,9 @@ function renderShell() {
 
       <section class="game-panel">
         <div class="toolbar">
+          <div class="chip-group">
+            ${getThemeMarkup()}
+          </div>
           <div class="chip-group">
             <button class="chip" data-mode="ko">한글</button>
             <button class="chip" data-mode="en">영문</button>
@@ -366,6 +392,7 @@ function renderShell() {
   refs.bestCombo = document.querySelector('#best-combo')
   refs.mistakes = document.querySelector('#mistakes')
   refs.bestScore = document.querySelector('#best-score')
+  refs.themeButtons = [...document.querySelectorAll('[data-theme]')]
   refs.modeButtons = [...document.querySelectorAll('[data-mode]')]
   refs.durationButtons = [...document.querySelectorAll('[data-duration]')]
 }
@@ -388,6 +415,13 @@ function bindEvents() {
     if (target.matches('[data-duration]')) {
       state.duration = Number(target.dataset.duration)
       resetMetrics()
+      render()
+      focusInput()
+    }
+
+    if (target.matches('[data-theme]')) {
+      state.theme = target.dataset.theme
+      applyTheme(state.theme)
       render()
       focusInput()
     }
@@ -463,6 +497,10 @@ function render() {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
   })
 
+  refs.themeButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.theme === state.theme)
+  })
+
   refs.durationButtons.forEach((button) => {
     button.classList.toggle('is-active', Number(button.dataset.duration) === state.duration)
   })
@@ -474,6 +512,7 @@ function render() {
   }
 }
 
+applyTheme(state.theme)
 renderShell()
 bindEvents()
 resetMetrics()

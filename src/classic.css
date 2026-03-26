@@ -360,6 +360,100 @@ h1 {
   background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(124, 255, 138, 0.12));
 }
 
+body.theme-arcade {
+  color: #f8f4ec;
+  background:
+    radial-gradient(circle at top, rgba(255, 94, 125, 0.18), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(56, 189, 248, 0.18), transparent 26%),
+    linear-gradient(180deg, #1b1221 0%, #0b1018 46%, #05070b 100%);
+}
+
+body.theme-arcade::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 90%);
+}
+
+body.theme-arcade::after {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 95, 125, 0.16), transparent 24%),
+    radial-gradient(circle at 82% 12%, rgba(91, 244, 201, 0.12), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(111, 211, 255, 0.08), transparent 34%);
+}
+
+body.theme-arcade .hero-panel,
+body.theme-arcade .game-panel,
+body.theme-arcade .stat-panel {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015)),
+    rgba(11, 15, 24, 0.76);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-arcade .hero-panel::after {
+  background: radial-gradient(circle, rgba(255, 95, 125, 0.42) 0%, rgba(255, 95, 125, 0) 72%);
+}
+
+body.theme-arcade .mode-link,
+body.theme-arcade .chip,
+body.theme-arcade .reset-button {
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.03);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.theme-arcade .eyebrow {
+  color: #ff8fab;
+}
+
+body.theme-arcade .metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.theme-arcade .chip.is-active {
+  background: linear-gradient(135deg, rgba(255, 95, 125, 0.26), rgba(111, 211, 255, 0.2));
+  border-color: rgba(255, 143, 171, 0.85);
+  color: #fff1f5;
+}
+
+body.theme-arcade .progress-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+body.theme-arcade .progress-bar {
+  background: linear-gradient(90deg, #5bf4c9, #ff8fab, #ff5d73);
+}
+
+body.theme-arcade .prompt-box {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body.theme-arcade .input-wrap textarea {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(7, 10, 14, 0.76);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body.theme-arcade .input-wrap textarea:focus {
+  border-color: rgba(255, 143, 171, 0.8);
+  box-shadow: 0 0 0 4px rgba(255, 95, 125, 0.14);
+}
+
+body.theme-arcade .stat-panel.accent {
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(255, 140, 66, 0.16));
+}
+
 @media (max-width: 920px) {
   .hero-panel {
     grid-template-columns: 1fr;

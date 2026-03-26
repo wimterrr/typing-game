@@ -149,11 +149,16 @@ const DIFFICULTY = {
   normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82, scoreMultiplier: 1 },
   hard: { label: '폭우', spawnMs: 700, minSpeed: 80, maxSpeed: 118, scoreMultiplier: 1 },
 }
+const THEMES = {
+  terminal: '터미널',
+  arcade: '아케이드',
+}
 
 const app = document.querySelector('#app')
 const refs = {}
 const PACE_STEP_SIZE = 10
 const mobileMediaQuery = window.matchMedia('(max-width: 640px)')
+const themeStorageKey = 'key-tempo-theme'
 
 function isMobileLayout() {
   return mobileMediaQuery.matches
@@ -163,9 +168,21 @@ function getVisibleDifficulties() {
   return isMobileLayout() ? ['mobile', 'easy', 'normal'] : ['easy', 'normal', 'hard']
 }
 
+function getSavedTheme() {
+  const value = window.localStorage.getItem(themeStorageKey)
+  return value === 'arcade' ? 'arcade' : 'terminal'
+}
+
+function applyTheme(theme) {
+  document.body.classList.remove('theme-terminal', 'theme-arcade')
+  document.body.classList.add(`theme-${theme}`)
+  window.localStorage.setItem(themeStorageKey, theme)
+}
+
 const state = {
   mode: 'ko',
   difficulty: isMobileLayout() ? 'mobile' : 'normal',
+  theme: getSavedTheme(),
   running: false,
   finished: false,
   started: false,
@@ -223,6 +240,12 @@ function getStatusText() {
 function getDifficultyMarkup() {
   return getVisibleDifficulties()
     .map((key) => `<button class="chip" data-difficulty="${key}">${DIFFICULTY[key].label}</button>`)
+    .join('')
+}
+
+function getThemeMarkup() {
+  return Object.entries(THEMES)
+    .map(([key, label]) => `<button class="chip" data-theme="${key}">${label}</button>`)
     .join('')
 }
 
@@ -416,6 +439,9 @@ function render() {
   refs.difficultyLabel.textContent = DIFFICULTY[state.difficulty].label
   refs.status.textContent = getStatusText()
   refs.resetButton.textContent = state.finished ? '다시 시작' : '리셋'
+  refs.themeButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.theme === state.theme)
+  })
   refs.modeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
   })
@@ -463,6 +489,9 @@ function renderShell() {
 
       <section class="game-panel">
         <div class="toolbar">
+          <div class="chip-group">
+            ${getThemeMarkup()}
+          </div>
           <div class="chip-group">
             <button class="chip" data-mode="ko">한글</button>
             <button class="chip" data-mode="en">영문</button>
@@ -519,6 +548,7 @@ function renderShell() {
   refs.input = document.querySelector('#typing-input')
   refs.status = document.querySelector('#status-text')
   refs.resetButton = document.querySelector('#reset-button')
+  refs.themeButtons = [...document.querySelectorAll('[data-theme]')]
   refs.modeButtons = [...document.querySelectorAll('[data-mode]')]
   refs.difficultyButtons = [...document.querySelectorAll('[data-difficulty]')]
 }
@@ -541,6 +571,13 @@ function bindEvents() {
     if (target.matches('[data-difficulty]')) {
       state.difficulty = target.dataset.difficulty
       resetGame()
+      render()
+      focusInput()
+    }
+
+    if (target.matches('[data-theme]')) {
+      state.theme = target.dataset.theme
+      applyTheme(state.theme)
       render()
       focusInput()
     }
@@ -599,6 +636,7 @@ function bindEvents() {
   })
 }
 
+applyTheme(state.theme)
 renderShell()
 bindEvents()
 resetGame()
