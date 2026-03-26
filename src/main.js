@@ -144,10 +144,10 @@ const WORD_BANK = {
 }
 
 const DIFFICULTY = {
-  mobile: { label: '핸드폰 버전', spawnMs: 2200, minSpeed: 22, maxSpeed: 34 },
-  easy: { label: '순한 비', spawnMs: 1500, minSpeed: 36, maxSpeed: 58 },
-  normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82 },
-  hard: { label: '폭우', spawnMs: 700, minSpeed: 80, maxSpeed: 118 },
+  mobile: { label: '핸드폰 버전', spawnMs: 2200, minSpeed: 22, maxSpeed: 34, scoreMultiplier: 1.35 },
+  easy: { label: '순한 비', spawnMs: 1500, minSpeed: 36, maxSpeed: 58, scoreMultiplier: 1 },
+  normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82, scoreMultiplier: 1 },
+  hard: { label: '폭우', spawnMs: 700, minSpeed: 80, maxSpeed: 118, scoreMultiplier: 1 },
 }
 
 const app = document.querySelector('#app')
@@ -278,11 +278,13 @@ function handleSuccessfulHit(word) {
   const matchedWords = state.words.filter((item) => normalizeText(item.text) === normalizeText(word.text))
   state.words = state.words.filter((item) => normalizeText(item.text) !== normalizeText(word.text))
   const clearedCount = matchedWords.length
+  const difficulty = DIFFICULTY[state.difficulty]
 
   state.cleared += clearedCount
   state.combo += 1
   state.bestCombo = Math.max(state.bestCombo, state.combo)
-  state.score += clearedCount * (word.text.length * 10 + (getPaceStep() + 1) * 8) + state.combo * 2
+  const baseScore = clearedCount * (word.text.length * 10 + (getPaceStep() + 1) * 8) + state.combo * 2
+  state.score += Math.round(baseScore * difficulty.scoreMultiplier)
   state.currentInput = ''
   refs.input.value = ''
 
