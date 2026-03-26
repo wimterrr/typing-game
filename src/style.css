@@ -151,7 +151,8 @@ h1 {
 }
 
 .toolbar,
-.status-row {
+.status-row,
+.arena-hud {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -205,31 +206,69 @@ h1 {
   background: linear-gradient(90deg, var(--mint), var(--accent), var(--accent-strong));
 }
 
-.prompt-box {
-  min-height: 180px;
+.arena-shell {
   border-radius: 24px;
-  padding: 26px;
+  padding: 16px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-    rgba(0, 0, 0, 0.2);
+    radial-gradient(circle at top, rgba(82, 227, 194, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.22);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
-  line-height: 1.8;
-  letter-spacing: 0.01em;
 }
 
-.prompt-box span {
-  color: rgba(255, 255, 255, 0.35);
+.arena-hud {
+  color: var(--text-soft);
+  font-size: 0.92rem;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
-.prompt-box .is-correct {
-  color: var(--mint);
+.arena-hud strong {
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
-.prompt-box .is-wrong {
-  color: var(--danger);
-  background: rgba(255, 107, 107, 0.12);
-  border-radius: 6px;
+.arena {
+  position: relative;
+  min-height: 420px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(82, 227, 194, 0.07), rgba(255, 107, 107, 0.05)),
+    rgba(6, 10, 14, 0.82);
+}
+
+.arena::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 72px;
+  background: linear-gradient(180deg, rgba(255, 107, 107, 0), rgba(255, 107, 107, 0.2));
+  pointer-events: none;
+}
+
+.falling-word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  color: #fff;
+  font-size: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.falling-word.is-target {
+  border-color: rgba(255, 209, 102, 0.9);
+  color: #fff4cb;
+  background: rgba(255, 209, 102, 0.16);
 }
 
 .input-wrap {
@@ -238,27 +277,25 @@ h1 {
   margin: 18px 0 20px;
 }
 
-.input-wrap textarea {
+.typing-input {
   width: 100%;
-  resize: vertical;
-  min-height: 132px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 22px;
   padding: 18px 20px;
   background: rgba(7, 10, 14, 0.76);
   color: #fff;
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1.06rem;
+  line-height: 1.2;
   outline: none;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.input-wrap textarea:focus {
+.typing-input:focus {
   border-color: rgba(82, 227, 194, 0.72);
   box-shadow: 0 0 0 4px rgba(82, 227, 194, 0.14);
 }
 
-.input-wrap textarea:disabled {
+.typing-input:disabled {
   opacity: 0.72;
 }
 
@@ -319,5 +356,9 @@ h1 {
 
   .reset-button {
     width: 100%;
+  }
+
+  .arena {
+    min-height: 360px;
   }
 }
