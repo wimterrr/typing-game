@@ -153,11 +153,19 @@ const DIFFICULTY = {
 const app = document.querySelector('#app')
 const refs = {}
 const PACE_STEP_SIZE = 10
-const isSmallScreen = window.matchMedia('(max-width: 640px)').matches
+const mobileMediaQuery = window.matchMedia('(max-width: 640px)')
+
+function isMobileLayout() {
+  return mobileMediaQuery.matches
+}
+
+function getVisibleDifficulties() {
+  return isMobileLayout() ? ['mobile', 'easy', 'normal'] : ['easy', 'normal', 'hard']
+}
 
 const state = {
   mode: 'ko',
-  difficulty: isSmallScreen ? 'mobile' : 'normal',
+  difficulty: isMobileLayout() ? 'mobile' : 'normal',
   running: false,
   finished: false,
   started: false,
@@ -210,6 +218,12 @@ function getStatusText() {
   }
 
   return '떨어지는 단어를 그대로 입력하세요. 놓치면 체력이 줄어듭니다.'
+}
+
+function getDifficultyMarkup() {
+  return getVisibleDifficulties()
+    .map((key) => `<button class="chip" data-difficulty="${key}">${DIFFICULTY[key].label}</button>`)
+    .join('')
 }
 
 function resetGame() {
@@ -455,10 +469,7 @@ function renderShell() {
             <button class="chip" data-mode="mixed">믹스</button>
           </div>
           <div class="chip-group">
-            <button class="chip" data-difficulty="mobile">${DIFFICULTY.mobile.label}</button>
-            <button class="chip" data-difficulty="easy">${DIFFICULTY.easy.label}</button>
-            <button class="chip" data-difficulty="normal">${DIFFICULTY.normal.label}</button>
-            <button class="chip" data-difficulty="hard">${DIFFICULTY.hard.label}</button>
+            ${getDifficultyMarkup()}
           </div>
         </div>
 
@@ -480,7 +491,7 @@ function renderShell() {
               type="text"
               inputmode="text"
               enterkeyhint="done"
-              placeholder="단어를 그대로 입력하세요"
+              placeholder="아무 단어나 입력하면 시작합니다"
               autocomplete="off"
               autocorrect="off"
               autocapitalize="off"
