@@ -144,6 +144,7 @@ const WORD_BANK = {
 }
 
 const DIFFICULTY = {
+  mobile: { label: '핸드폰 버전', spawnMs: 2200, minSpeed: 22, maxSpeed: 34 },
   easy: { label: '순한 비', spawnMs: 1500, minSpeed: 36, maxSpeed: 58 },
   normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82 },
   hard: { label: '폭우', spawnMs: 700, minSpeed: 80, maxSpeed: 118 },
@@ -152,10 +153,11 @@ const DIFFICULTY = {
 const app = document.querySelector('#app')
 const refs = {}
 const PACE_STEP_SIZE = 10
+const isSmallScreen = window.matchMedia('(max-width: 640px)').matches
 
 const state = {
   mode: 'ko',
-  difficulty: 'normal',
+  difficulty: isSmallScreen ? 'mobile' : 'normal',
   running: false,
   finished: false,
   started: false,
@@ -451,7 +453,7 @@ function renderShell() {
             <button class="chip" data-mode="mixed">믹스</button>
           </div>
           <div class="chip-group">
-            <span class="chip chip-label">핸드폰 버전</span>
+            <button class="chip" data-difficulty="mobile">${DIFFICULTY.mobile.label}</button>
             <button class="chip" data-difficulty="easy">${DIFFICULTY.easy.label}</button>
             <button class="chip" data-difficulty="normal">${DIFFICULTY.normal.label}</button>
             <button class="chip" data-difficulty="hard">${DIFFICULTY.hard.label}</button>
