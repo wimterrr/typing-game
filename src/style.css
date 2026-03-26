@@ -1,25 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap');
 
 :root {
-  font-family: 'Space Grotesk', sans-serif;
-  color: #f8f4ec;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #d8ffe1;
   background:
-    radial-gradient(circle at top, rgba(255, 94, 125, 0.18), transparent 28%),
-    radial-gradient(circle at 78% 18%, rgba(56, 189, 248, 0.18), transparent 26%),
-    linear-gradient(180deg, #1b1221 0%, #0b1018 46%, #05070b 100%);
+    radial-gradient(circle at top, rgba(124, 255, 138, 0.12), transparent 26%),
+    radial-gradient(circle at 80% 18%, rgba(255, 209, 102, 0.1), transparent 24%),
+    linear-gradient(180deg, #0a0f0d 0%, #050806 50%, #020403 100%);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --panel: rgba(11, 15, 24, 0.76);
-  --panel-border: rgba(255, 255, 255, 0.12);
-  --text-soft: rgba(248, 244, 236, 0.72);
-  --accent: #ff8fab;
-  --accent-strong: #ff5d73;
-  --mint: #5bf4c9;
+  --panel: rgba(5, 9, 7, 0.92);
+  --panel-border: rgba(124, 255, 138, 0.18);
+  --text-soft: rgba(189, 234, 198, 0.74);
+  --accent: #7cff8a;
+  --accent-strong: #4ce56a;
+  --mint: #b8ff5b;
   --danger: #ff6b6b;
-  --sky: #6fd3ff;
-  --shadow: 0 28px 100px rgba(0, 0, 0, 0.42);
+  --sky: #ffd166;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -42,17 +42,18 @@ body::after {
 
 body::before {
   background:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 90%);
+    linear-gradient(rgba(124, 255, 138, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 255, 138, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 30%);
+  background-size: 38px 38px, 38px 38px, 100% 6px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.75), transparent 96%);
 }
 
 body::after {
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 95, 125, 0.16), transparent 24%),
-    radial-gradient(circle at 82% 12%, rgba(91, 244, 201, 0.12), transparent 22%),
-    radial-gradient(circle at 50% 100%, rgba(111, 211, 255, 0.08), transparent 34%);
+    radial-gradient(circle at 15% 20%, rgba(124, 255, 138, 0.12), transparent 24%),
+    radial-gradient(circle at 82% 12%, rgba(255, 209, 102, 0.08), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(76, 229, 106, 0.08), transparent 34%);
 }
 
 button,
@@ -94,20 +95,32 @@ a {
 .game-panel,
 .stat-panel {
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015)),
+    linear-gradient(160deg, rgba(124, 255, 138, 0.06), rgba(255, 255, 255, 0.01)),
     var(--panel);
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(14px);
 }
 
 .hero-panel {
-  border-radius: 28px;
+  border-radius: 18px;
   padding: 18px 20px;
   display: grid;
   grid-template-columns: 1.45fr 0.95fr;
   gap: 16px;
   overflow: hidden;
+}
+
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  box-shadow: 18px 0 0 #ffd166, 36px 0 0 #7cff8a;
 }
 
 .hero-panel::after {
@@ -117,7 +130,7 @@ a {
   width: 260px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 95, 125, 0.42) 0%, rgba(255, 95, 125, 0) 72%);
+  background: radial-gradient(circle, rgba(124, 255, 138, 0.22) 0%, rgba(124, 255, 138, 0) 72%);
   pointer-events: none;
 }
 
@@ -132,17 +145,17 @@ a {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(124, 255, 138, 0.18);
   padding: 7px 13px;
   color: var(--text-soft);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: rgba(9, 14, 10, 0.88);
+  box-shadow: inset 0 1px 0 rgba(124, 255, 138, 0.08);
 }
 
 .eyebrow {
   margin: 0;
-  color: var(--accent);
-  letter-spacing: 0.28em;
+  color: var(--sky);
+  letter-spacing: 0.22em;
   font-size: 0.72rem;
 }
 
@@ -150,6 +163,7 @@ h1 {
   margin: 6px 0 10px;
   font-size: clamp(2.35rem, 5vw, 4.1rem);
   line-height: 0.9;
+  letter-spacing: -0.04em;
 }
 
 .hero-text {
@@ -173,8 +187,10 @@ h1 {
 }
 
 .metric-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(124, 255, 138, 0.06), rgba(124, 255, 138, 0.02)),
+    rgba(7, 11, 8, 0.95);
+  border: 1px solid rgba(124, 255, 138, 0.12);
 }
 
 .metric-card span,
@@ -198,7 +214,7 @@ h1 {
 }
 
 .game-panel {
-  border-radius: 28px;
+  border-radius: 18px;
   padding: 24px;
 }
 
@@ -224,15 +240,15 @@ h1 {
 
 .chip,
 .reset-button {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(124, 255, 138, 0.18);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(255, 255, 255, 0.03);
-  color: #fff;
+    linear-gradient(135deg, rgba(124, 255, 138, 0.08), rgba(124, 255, 138, 0.02)),
+    rgba(6, 10, 7, 0.94);
+  color: #d8ffe1;
   border-radius: 999px;
   padding: 10px 16px;
   transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(124, 255, 138, 0.08);
 }
 
 .chip:hover,
@@ -242,9 +258,9 @@ h1 {
 }
 
 .chip.is-active {
-  background: linear-gradient(135deg, rgba(255, 95, 125, 0.26), rgba(111, 211, 255, 0.2));
-  border-color: rgba(255, 143, 171, 0.85);
-  color: #fff1f5;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.18), rgba(124, 255, 138, 0.14));
+  border-color: rgba(255, 209, 102, 0.78);
+  color: #fff6d9;
 }
 
 .progress-track {
@@ -262,13 +278,13 @@ h1 {
 }
 
 .arena-shell {
-  border-radius: 24px;
+  border-radius: 18px;
   padding: 16px;
   background:
-    radial-gradient(circle at top, rgba(255, 95, 125, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-    rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(circle at top, rgba(124, 255, 138, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(124, 255, 138, 0.05), rgba(255, 255, 255, 0.01)),
+    rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(124, 255, 138, 0.1);
 }
 
 .arena-hud {
@@ -279,7 +295,7 @@ h1 {
 }
 
 .arena-hud strong {
-  color: #fff;
+  color: #fff6d9;
   font-family: 'IBM Plex Mono', monospace;
 }
 
@@ -287,14 +303,15 @@ h1 {
   position: relative;
   min-height: 420px;
   overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  border: 1px solid rgba(124, 255, 138, 0.12);
   background:
-    linear-gradient(180deg, rgba(255, 95, 125, 0.08), rgba(91, 244, 201, 0.05)),
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    rgba(6, 10, 14, 0.82);
-  background-size: auto, 28px 28px, 28px 28px, auto;
+    linear-gradient(180deg, rgba(124, 255, 138, 0.08), rgba(255, 209, 102, 0.04)),
+    linear-gradient(rgba(124, 255, 138, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 255, 138, 0.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 30%),
+    rgba(2, 5, 3, 0.92);
+  background-size: auto, 28px 28px, 28px 28px, 100% 8px, auto;
 }
 
 .arena::after {
@@ -302,7 +319,7 @@ h1 {
   position: absolute;
   inset: auto 0 0;
   height: 72px;
-  background: linear-gradient(180deg, rgba(255, 107, 107, 0), rgba(255, 107, 107, 0.2));
+  background: linear-gradient(180deg, rgba(255, 107, 107, 0), rgba(255, 107, 107, 0.22));
   pointer-events: none;
 }
 
@@ -314,21 +331,21 @@ h1 {
   align-items: center;
   min-height: 42px;
   padding: 0 16px;
-  border-radius: 999px;
+  border-radius: 12px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
-    rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+    linear-gradient(135deg, rgba(124, 255, 138, 0.14), rgba(124, 255, 138, 0.05)),
+    rgba(3, 7, 4, 0.94);
+  border: 1px solid rgba(124, 255, 138, 0.16);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
-  color: #fff;
+  color: #d8ffe1;
   font-size: 1rem;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
 }
 
 .falling-word.is-target {
-  border-color: rgba(255, 143, 171, 0.95);
-  color: #fff2f6;
-  background: linear-gradient(135deg, rgba(255, 95, 125, 0.24), rgba(111, 211, 255, 0.2));
+  border-color: rgba(255, 209, 102, 0.82);
+  color: #fff6d9;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.22), rgba(124, 255, 138, 0.16));
 }
 
 .input-wrap {
@@ -343,21 +360,21 @@ h1 {
 
 .typing-input {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 22px;
+  border: 1px solid rgba(124, 255, 138, 0.16);
+  border-radius: 14px;
   padding: 18px 20px;
-  background: rgba(7, 10, 14, 0.76);
-  color: #fff;
+  background: rgba(2, 5, 3, 0.96);
+  color: #e9ffef;
   font-size: 1.06rem;
   line-height: 1.2;
   outline: none;
   transition: border-color 160ms ease, box-shadow 160ms ease;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(124, 255, 138, 0.06);
 }
 
 .typing-input:focus {
-  border-color: rgba(255, 143, 171, 0.8);
-  box-shadow: 0 0 0 4px rgba(255, 95, 125, 0.14);
+  border-color: rgba(255, 209, 102, 0.76);
+  box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.12);
 }
 
 .typing-input:disabled {
@@ -383,7 +400,7 @@ h1 {
 }
 
 .stat-panel.accent {
-  background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(255, 140, 66, 0.16));
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(124, 255, 138, 0.12));
 }
 
 @media (max-width: 920px) {

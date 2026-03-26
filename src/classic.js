@@ -261,9 +261,9 @@ function renderShell() {
             <a class="mode-link" href="/">산성비</a>
             <a class="mode-link" href="/classic.html">클래식</a>
           </div>
-          <p class="eyebrow">CLASSIC TYPING</p>
+          <p class="eyebrow">TERMINAL PRACTICE MODE</p>
           <h1>Key Tempo</h1>
-          <p class="hero-text">문장을 그대로 따라 치면서 속도와 정확도를 겨루는 클래식 타자 연습.</p>
+          <p class="hero-text">터미널 로그를 정리하듯 문장을 따라 치면서 속도와 정확도를 겨루는 클래식 모드.</p>
         </div>
         <div class="hero-metrics">
           <div class="metric-card">

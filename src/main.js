@@ -441,9 +441,9 @@ function renderShell() {
             <a class="mode-link" href="/">산성비</a>
             <a class="mode-link" href="/classic.html">클래식</a>
           </div>
-          <p class="eyebrow">ACID RAIN TYPING</p>
+          <p class="eyebrow">TERMINAL RAIN SESSION</p>
           <h1>Key Tempo</h1>
-          <p class="hero-text">위에서 떨어지는 단어를 그대로 입력해서 지우는 산성비 스타일 타자게임.</p>
+          <p class="hero-text">개발자 터미널처럼 보이는 화면 위로 단어가 떨어지는 CLI 감성 산성비 타자게임.</p>
         </div>
         <div class="hero-metrics">
           <div class="metric-card">
