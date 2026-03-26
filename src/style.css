@@ -247,6 +247,15 @@ h1 {
   color: #fff1f5;
 }
 
+.chip-label {
+  cursor: default;
+  color: var(--text-soft);
+  background:
+    linear-gradient(135deg, rgba(91, 244, 201, 0.14), rgba(111, 211, 255, 0.12)),
+    rgba(255, 255, 255, 0.03);
+  border-style: dashed;
+}
+
 .progress-track {
   height: 10px;
   background: rgba(255, 255, 255, 0.06);

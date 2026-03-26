@@ -451,6 +451,7 @@ function renderShell() {
             <button class="chip" data-mode="mixed">믹스</button>
           </div>
           <div class="chip-group">
+            <span class="chip chip-label">핸드폰 버전</span>
             <button class="chip" data-difficulty="easy">${DIFFICULTY.easy.label}</button>
             <button class="chip" data-difficulty="normal">${DIFFICULTY.normal.label}</button>
             <button class="chip" data-difficulty="hard">${DIFFICULTY.hard.label}</button>
