@@ -54,12 +54,82 @@ const TEXT_BANK = {
   ],
 }
 
+const CATEGORY_LABELS = {
+  all: '전체',
+  latest: '최신 밈',
+  classic: '고전 밈',
+  fandom: '팬덤어',
+  office: '직장인어',
+}
+
+const CATEGORY_TEXTS = {
+  ko: {
+    latest: [
+      '메불메 갈리는 취향도 막상 얘기해보면 의외로 겹치는 지점이 많다.',
+      '만반잘부 한마디만 봐도 요즘 인터넷 말투가 바로 느껴질 때가 있다.',
+      '토마토코어 같은 표현은 요즘 스타일 얘기가 거의 밈처럼 굴러간다는 뜻이다.',
+    ],
+    classic: [
+      '갑분싸가 되지 않게 눈치 보면서도 결국 TMI를 흘리는 사람이 꼭 있다.',
+      '킹받는 일이 있어도 타자는 침착하게 치는 사람이 결국 이긴다.',
+      '스불재 같은 상황도 막상 하나씩 치워내면 생각보다 금방 풀린다.',
+    ],
+    fandom: [
+      '최애 얘기가 시작되면 덕질의 온도와 말투가 순식간에 달라지는 걸 느낀다.',
+      '입덕은 순식간인데 탈덕은 늘 서사와 떡밥이 길게 남는 편이다.',
+      '스밍과 포카와 직찍 얘기가 한 번 열리면 팬덤어는 거의 외국어처럼 들린다.',
+    ],
+    office: [
+      '칼퇴를 꿈꾸지만 회의실에서 보고자료와 메일회신이 끝없이 늘어나는 날도 있다.',
+      '연차 다음 날의 업무공유는 늘 많고 퇴근각은 생각보다 늦게 잡히곤 한다.',
+      '점메추보다 어려운 건 회의 직전까지 결재 라인을 맞추는 일일지도 모른다.',
+    ],
+  },
+  en: {
+    latest: [
+      'Some trends burn out fast, but the best meme words still sound sharp in chat.',
+      'Even a short phrase can feel fresh when the internet suddenly decides it is the word.',
+    ],
+    classic: [
+      'A good old meme still lands when the whole room already knows the timing.',
+      'Classic internet slang survives because people keep reusing it at the right moment.',
+    ],
+    fandom: [
+      'Every fandom has its own language, and outsiders only catch the loudest words.',
+      'Lore, spoilers, and bias talk can turn a short chat into a full timeline recap.',
+    ],
+    office: [
+      'A calm morning can still vanish the second another followup lands in the inbox.',
+      'The cleanest typing rhythm disappears fast when meetings and deadlines stack together.',
+    ],
+  },
+  mixed: {
+    latest: [
+      '만반잘부 한마디로 시작된 chat 이 갑자기 밈 배틀로 번질 때가 있다.',
+      '독파민 채우듯 한 줄씩 넘기다 보면 combo 가 은근히 길게 이어진다.',
+    ],
+    classic: [
+      '갑분싸 되지 않으려면 chat flow 를 잘 읽고 TMI 는 적당히 던져야 한다.',
+      '킹받네 급 상황이어도 typing rhythm 은 surprisingly calm 해야 한다.',
+    ],
+    fandom: [
+      '최애 서사 얘기로 입덕한 사람은 no joke 떡밥 정리에 진심이 된다.',
+      '포카 얘기하다가 fandom lore 로 넘어가면 thread 가 unexpectedly 길어진다.',
+    ],
+    office: [
+      '칼퇴를 꿈꾸지만 회의실 일정이 또 잡히면 mood 가 바로 달라진다.',
+      '퇴근각 보일 때 메일회신이 오면 vibe 가 한순간에 뒤집히는 법이다.',
+    ],
+  },
+}
+
 const bestScoreKey = 'key-tempo-classic-best-score'
 const app = document.querySelector('#app')
 const refs = {}
 
 const state = {
   mode: 'ko',
+  category: 'all',
   duration: 60,
   timeLeft: 60,
   timerId: null,
@@ -94,7 +164,10 @@ function normalizeText(value) {
 }
 
 function pickText(mode, previous) {
-  const bank = TEXT_BANK[mode]
+  const bank =
+    state.category === 'all'
+      ? [...TEXT_BANK[mode], ...Object.values(CATEGORY_TEXTS[mode]).flat()]
+      : CATEGORY_TEXTS[mode][state.category]
   const filtered = bank.filter((text) => text !== previous)
   const pool = filtered.length > 0 ? filtered : bank
   return normalizeText(pool[Math.floor(Math.random() * pool.length)])
@@ -286,6 +359,13 @@ function renderShell() {
             <button class="chip" data-mode="mixed">믹스</button>
           </div>
           <div class="chip-group">
+            <button class="chip" data-category="all">${CATEGORY_LABELS.all}</button>
+            <button class="chip" data-category="latest">${CATEGORY_LABELS.latest}</button>
+            <button class="chip" data-category="classic">${CATEGORY_LABELS.classic}</button>
+            <button class="chip" data-category="fandom">${CATEGORY_LABELS.fandom}</button>
+            <button class="chip" data-category="office">${CATEGORY_LABELS.office}</button>
+          </div>
+          <div class="chip-group">
             <button class="chip" data-duration="30">30초</button>
             <button class="chip" data-duration="60">60초</button>
             <button class="chip" data-duration="90">90초</button>
@@ -361,6 +441,7 @@ function renderShell() {
   refs.mistakes = document.querySelector('#mistakes')
   refs.bestScore = document.querySelector('#best-score')
   refs.modeButtons = [...document.querySelectorAll('[data-mode]')]
+  refs.categoryButtons = [...document.querySelectorAll('[data-category]')]
   refs.durationButtons = [...document.querySelectorAll('[data-duration]')]
 }
 
@@ -374,6 +455,13 @@ function bindEvents() {
 
     if (target.matches('[data-mode]')) {
       state.mode = target.dataset.mode
+      resetMetrics()
+      render()
+      focusInput()
+    }
+
+    if (target.matches('[data-category]')) {
+      state.category = target.dataset.category
       resetMetrics()
       render()
       focusInput()
@@ -445,6 +533,10 @@ function render() {
 
   refs.modeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
+  })
+
+  refs.categoryButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.category === state.category)
   })
 
   refs.durationButtons.forEach((button) => {

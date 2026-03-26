@@ -143,6 +143,35 @@ const WORD_BANK = {
   ],
 }
 
+const CATEGORY_LABELS = {
+  all: '전체',
+  latest: '최신 밈',
+  classic: '고전 밈',
+  fandom: '팬덤어',
+  office: '직장인어',
+}
+
+const CATEGORY_WORDS = {
+  ko: {
+    latest: ['메불메', '만반잘부', '토마토코어', '독파민', '오독완', '점메추', '들추날추'],
+    classic: ['갑분싸', 'TMI', '어그로', '킹받네', '스불재', '제곧내', '킹정'],
+    fandom: ['최애', '차애', '입덕', '탈덕', '덕질', '스밍', '포카', '직찍', '서사', '떡밥'],
+    office: ['칼퇴', '연차', '회의실', '결재', '보고자료', '메일회신', '업무공유', '퇴근각'],
+  },
+  en: {
+    latest: ['trend', 'doomscroll', 'algorithm', 'viral', 'timeline'],
+    classic: ['cringe', 'tmi', 'bait', 'meme', 'chaos'],
+    fandom: ['bias', 'fancam', 'spoiler', 'lore', 'merch'],
+    office: ['deadline', 'meeting', 'followup', 'report', 'asap'],
+  },
+  mixed: {
+    latest: ['메불메', 'trend', '만반잘부', 'algorithm', '독파민', 'viral'],
+    classic: ['갑분싸', 'cringe', '어그로', 'meme', '킹받네', 'chaos'],
+    fandom: ['최애', 'bias', '입덕', 'fancam', '포카', 'lore'],
+    office: ['칼퇴', 'deadline', '연차', 'meeting', '퇴근각', 'report'],
+  },
+}
+
 const DIFFICULTY = {
   easy: { label: '순한 비', spawnMs: 1500, minSpeed: 36, maxSpeed: 58 },
   normal: { label: '산성비', spawnMs: 1000, minSpeed: 56, maxSpeed: 82 },
@@ -154,6 +183,7 @@ const refs = {}
 
 const state = {
   mode: 'ko',
+  category: 'all',
   difficulty: 'normal',
   running: false,
   finished: false,
@@ -178,7 +208,11 @@ function normalizeText(value) {
 }
 
 function getWordPool() {
-  return WORD_BANK[state.mode]
+  if (state.category === 'all') {
+    return [...WORD_BANK[state.mode], ...Object.values(CATEGORY_WORDS[state.mode]).flat()]
+  }
+
+  return CATEGORY_WORDS[state.mode][state.category]
 }
 
 function randomFrom(list) {
@@ -392,6 +426,9 @@ function render() {
   refs.modeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.mode === state.mode)
   })
+  refs.categoryButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.category === state.category)
+  })
   refs.difficultyButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.difficulty === state.difficulty)
   })
@@ -442,6 +479,13 @@ function renderShell() {
             <button class="chip" data-mode="mixed">믹스</button>
           </div>
           <div class="chip-group">
+            <button class="chip" data-category="all">${CATEGORY_LABELS.all}</button>
+            <button class="chip" data-category="latest">${CATEGORY_LABELS.latest}</button>
+            <button class="chip" data-category="classic">${CATEGORY_LABELS.classic}</button>
+            <button class="chip" data-category="fandom">${CATEGORY_LABELS.fandom}</button>
+            <button class="chip" data-category="office">${CATEGORY_LABELS.office}</button>
+          </div>
+          <div class="chip-group">
             <button class="chip" data-difficulty="easy">${DIFFICULTY.easy.label}</button>
             <button class="chip" data-difficulty="normal">${DIFFICULTY.normal.label}</button>
             <button class="chip" data-difficulty="hard">${DIFFICULTY.hard.label}</button>
@@ -490,6 +534,7 @@ function renderShell() {
   refs.status = document.querySelector('#status-text')
   refs.resetButton = document.querySelector('#reset-button')
   refs.modeButtons = [...document.querySelectorAll('[data-mode]')]
+  refs.categoryButtons = [...document.querySelectorAll('[data-category]')]
   refs.difficultyButtons = [...document.querySelectorAll('[data-difficulty]')]
 }
 
@@ -503,6 +548,13 @@ function bindEvents() {
 
     if (target.matches('[data-mode]')) {
       state.mode = target.dataset.mode
+      resetGame()
+      render()
+      focusInput()
+    }
+
+    if (target.matches('[data-category]')) {
+      state.category = target.dataset.category
       resetGame()
       render()
       focusInput()
