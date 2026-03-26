@@ -465,6 +465,15 @@ function bindEvents() {
     handleInput(event.target.value)
   })
 
+  refs.input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !state.isComposing) {
+      event.preventDefault()
+      state.currentInput = ''
+      refs.input.value = ''
+      render()
+    }
+  })
+
   app.addEventListener('keydown', (event) => {
     if (event.target instanceof HTMLInputElement) {
       return
