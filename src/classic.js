@@ -7,6 +7,11 @@ const TEXT_BANK = {
     '빠르게 치는 것보다 정확하게 끝까지 밀고 가는 집중력이 더 중요하다.',
     '짧은 문장 하나를 완벽하게 입력하는 순간이 생각보다 꽤 짜릿하다.',
     '실수는 금방 지나가지만 콤보는 끝까지 플레이어를 들뜨게 만든다.',
+    '알잘딱깔센으로 끝내고 퇴근하는 날은 이상하게 자신감이 오른다.',
+    '킹받는 일이 있어도 타자는 침착하게 치는 사람이 결국 이긴다.',
+    '오늘은 갓생 모드로 들어가서 미뤄둔 일들을 하나씩 정리해본다.',
+    '스불재 같은 상황도 막상 하나씩 치워내면 생각보다 금방 풀린다.',
+    '폼 미쳤다 싶은 순간은 대개 조용히 쌓인 집중력에서 나온다.',
   ],
   en: [
     'Fast fingers win rounds, but clean focus wins the whole session.',
@@ -14,6 +19,11 @@ const TEXT_BANK = {
     'Typing games feel simple until the timer starts hunting every small mistake.',
     'Stay calm, keep rhythm, and let precision outrun raw panic speed.',
     'A perfect line is less about force and more about consistent control.',
+    'No cap, the hardest rounds are usually lost to panic and not to speed.',
+    'Let them cook only works when the keyboard rhythm stays steady.',
+    'The whole lobby goes quiet when someone suddenly locks into sigma focus.',
+    'Some days the vibes are clean and every sentence lands on the beat.',
+    'Touch grass later, first finish the line without blowing the combo.',
   ],
   mixed: [
     'Hello rhythm, 오늘도 정확도가 속도를 이긴다.',
@@ -21,6 +31,11 @@ const TEXT_BANK = {
     '오늘의 목표는 clean typing, 그리고 끝까지 zero quit.',
     '타자는 speed game 같지만 결국은 focus battle 이다.',
     '마지막 10초에는 calm mind 와 quick hands 가 답이다.',
+    '오늘 텐션은 sheesh 급인데 손은 surprisingly calm 하게 간다.',
+    '중꺾마 모드로 들어가면 combo 하나에도 aura가 붙는다.',
+    '폼 미쳤다 싶을 때도 no cap 정확도부터 챙겨야 한다.',
+    '알잘딱깔센 vibe 로 문장을 넘기면 리듬이 깔끔하게 이어진다.',
+    '갓생은 아침형만의 것이 아니라 steady typing 에서도 시작된다.',
   ],
 }
 
