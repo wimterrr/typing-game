@@ -247,16 +247,21 @@ function handleInput(rawValue) {
 
   state.currentInput = value
 
-  if (value === state.currentText) {
-    state.completed += 1
-    state.combo = state.lineHadMistake ? 0 : state.combo + 1
-    state.bestCombo = Math.max(state.bestCombo, state.combo)
-    state.score += state.currentText.length * 4 + (state.lineHadMistake ? 0 : 30)
-    state.currentInput = ''
-    state.lineHadMistake = false
-    state.currentText = pickText(state.mode, state.currentText)
+  render()
+}
+
+function submitCurrentText() {
+  if (state.currentInput !== state.currentText || state.finished) {
+    return
   }
 
+  state.completed += 1
+  state.combo = state.lineHadMistake ? 0 : state.combo + 1
+  state.bestCombo = Math.max(state.bestCombo, state.combo)
+  state.score += state.currentText.length * 4 + (state.lineHadMistake ? 0 : 30)
+  state.currentInput = ''
+  state.lineHadMistake = false
+  state.currentText = pickText(state.mode, state.currentText)
   render()
 }
 
@@ -450,6 +455,13 @@ function bindEvents() {
     handleInput(event.target.value)
   })
 
+  refs.input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !state.isComposing) {
+      event.preventDefault()
+      submitCurrentText()
+    }
+  })
+
   refs.promptBox.addEventListener('pointerdown', (event) => {
     const target = event.target
 
@@ -473,11 +485,15 @@ function bindEvents() {
 
 function render() {
   const bestScore = getBestScore()
-  const status = state.finished
-    ? '시간 종료. 다시 눌러 최고 점수를 갱신해보세요.'
-    : state.running
-      ? '리듬을 유지하세요. 실수하면 콤보가 끊깁니다.'
-      : '입력을 시작하는 순간 타이머가 작동합니다.'
+  let status = '입력을 시작하는 순간 타이머가 작동합니다.'
+
+  if (state.finished) {
+    status = '시간 종료. 다시 눌러 최고 점수를 갱신해보세요.'
+  } else if (state.currentInput === state.currentText && state.currentText.length > 0) {
+    status = '문장 완료. Enter를 누르면 다음 문장으로 넘어갑니다.'
+  } else if (state.running) {
+    status = '리듬을 유지하세요. 문장을 다 쓰면 Enter로 확정합니다.'
+  }
 
   refs.timeLeft.textContent = formatTime(state.timeLeft)
   refs.speed.textContent = `${getSpeed()} WPM`
